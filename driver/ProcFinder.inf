@@ -1,0 +1,50 @@
+; ProcFinder.inf
+; INF file for the ProcFinder kernel driver (WDM, no KMDF)
+
+[Version]
+Signature   = "$WINDOWS NT$"
+Class       = System
+ClassGuid   = {4D36E97D-E325-11CE-BFC1-08002BE10318}
+Provider    = %ManufacturerName%
+DriverVer   = 07/16/2026,1.0.0.0
+CatalogFile = ProcFinder.cat
+
+[DestinationDirs]
+DefaultDestDir = 12   ; %windir%\System32\drivers
+
+[SourceDisksNames]
+1 = %DiskName%,,,""
+
+[SourceDisksFiles]
+ProcFinder.sys = 1,,
+
+; -----------------------------------------------------------------------
+[DefaultInstall.NTamd64]
+CopyFiles = ProcFinder_CopyFiles
+
+[DefaultInstall.NTamd64.Services]
+AddService = ProcFinder,0x00000002,ProcFinder_Service
+
+; -----------------------------------------------------------------------
+[DefaultUninstall.NTamd64]
+DelFiles   = ProcFinder_CopyFiles
+DelService = ProcFinder
+
+; -----------------------------------------------------------------------
+[ProcFinder_CopyFiles]
+ProcFinder.sys
+
+[ProcFinder_Service]
+DisplayName    = %ServiceName%
+Description    = %ServiceDescription%
+ServiceBinary  = %12%\ProcFinder.sys
+ServiceType    = 1   ; SERVICE_KERNEL_DRIVER
+StartType      = 3   ; SERVICE_DEMAND_START
+ErrorControl   = 1   ; SERVICE_ERROR_NORMAL
+
+; -----------------------------------------------------------------------
+[Strings]
+ManufacturerName    = "ProcFinder"
+DiskName            = "ProcFinder Installation Disk"
+ServiceName         = "ProcFinder"
+ServiceDescription  = "ProcFinder Process ID Lookup Driver"
